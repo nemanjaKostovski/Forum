@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { register } from '../util/forum-service';
+import { register } from '../util';
 import styles from './Register.module.css';
 
 const Register = ({ setUser, history }) => {

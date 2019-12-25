@@ -1,24 +1,40 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styles from './Topics.module.css';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { getTopics } from '../util/forum-service';
+import { connect } from 'react-redux';
+import {Link} from 'react-router-dom';
+import { getTopics } from '../util';
+import { SET_TOPICS } from '../util/ActionTypes';
 
-const Topics = ({ topicID }) => {
-    const [topicNames, setTopicNames] = useState('')
+class Topics extends Component {
 
-    useEffect(() => {
-        getTopics(topicID)
-            .then(data => {
-                setTopicNames(data.topics.map((topics) => <p key={topics.topic_id}>{topics.title}</p>))
-            }) 
-    },[topicID])
+  componentDidMount() {
+    getTopics()
+    .then(({ topics }) => {
+      this.props.setTopics(topics)
+    })
+  }
+
+  render () {
+    let { topics } = this.props;
+    topics = topics && topics.map((topic, index) => (
+      <Link key={topic.topic_id} to={`/topic/${topic.topic_id}`} >{topic.title}</Link>
+    ))
+
     return (
-        <div className={styles.topics}>
-            <h3>Topics</h3>
-            {topicNames}
-        </div>
-    )
+      <div className={styles.topics}>
+        {topics}
+      </div>);
+  }
 }
 
-export default Topics
+const mapDispatchToProps = dispatch => ({
+  setTopics: function(payload) {
+    dispatch({type: SET_TOPICS, payload})
+  }
+});
+
+const mapStateToProps = state => ({
+    topics: state.topics
+}); 
+
+export default connect(mapStateToProps, mapDispatchToProps)(Topics);

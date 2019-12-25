@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { login } from '../util/forum-service';
+import { login } from '../util';
 import { withRouter } from 'react-router-dom';
 import styles from './Login.module.css';
 
